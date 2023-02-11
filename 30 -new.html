@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #clock {
+        font-size: 2000%;
+        color: white;
+        text-align: center;
+        margin-top: 100px;
+      }
+      body {
+        background-color: black;
+      }
+      #time-input {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+      }
+      #color-input {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+      }
+      button {
+        font-size: 250%;
+        margin-top: 50px;
+        display: block;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="clock">30</div>
+    <input type="text" id="time-input">
+    <input type="color" id="color-input">
+    <button id="reset-button">Reset</button>
+	<button id="mute-button">Mute</button>
+
+
+<script>
+const clock = document.querySelector("#clock");
+const resetButton = document.querySelector("#reset-button");
+const timeInput = document.querySelector("#time-input");
+const colorInput = document.querySelector("#color-input");
+let time = 30;
+let intervalId;
+const soundsDirectory = "file:///C:\Users\shay4\Desktop\sport\sounds";
+let soundFiles = [];
+
+// Get all the sound files in the sounds directory
+fetch(soundsDirectory)
+  .then((response) => response.text())
+  .then((text) => {
+    // Parse the HTML string to extract the sound file names
+    const parser = new DOMParser();
+    const htmlDoc = parser.parseFromString(text, "text/html");
+    const links = htmlDoc.querySelectorAll("a");
+    links.forEach((link) => {
+      soundFiles.push(soundsDirectory + link.textContent);
+    });
+  });
+
+const audio = new Audio();
+
+function countDown() {
+  clock.innerHTML = --time;
+  if (time === 0) {
+    clearInterval(intervalId);
+    const randomIndex = Math.floor(Math.random() * soundFiles.length);
+    audio.src = soundFiles[randomIndex];
+    audio.play();
+    time = +timeInput.value || 30;
+    clock.innerHTML = time;
+    document.body.style.backgroundColor = "black";
+    intervalId = setInterval(countDown, 1000);
+  } else if (time <= +timeInput.value / 2) {
+    document.body.style.backgroundColor = "red";
+  }
+}
+
+resetButton.addEventListener("click", function () {
+  clearInterval(intervalId);
+  time = +timeInput.value || 30;
+  clock.innerHTML = time;
+  document.body.style.backgroundColor = "black";
+  intervalId = setInterval(countDown, 1000);
+});
+
+timeInput.addEventListener("change", function () {
+  time = +timeInput.value || 30;
+});
+
+colorInput.addEventListener("change", function () {
+  document.body.style.backgroundColor = colorInput.value;
+});
+
+intervalId = setInterval(countDown, 1000);
+
+</script>
+
+  </body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        background-color: black;
+      }
+      #clock {
+        font-size: 500%;
+        color: white;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      #reset-button {
+        font-size: 200%;
+        position: absolute;
+        bottom: 10%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        color: red;
+        cursor: pointer;
+      }
+      #background-color-box {
+        position: absolute;
+        bottom: 10%;
+        right: 10%;
+        width: 200px;
+        height: 50px;
+      }
+      #time-box {
+        position: absolute;
+        bottom: 10%;
+        right: 10%;
+        width: 200px;
+        height: 50px;
+        margin-top: 60px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="clock">30</div>
+    <div id="reset-button">Reset</div>
+    <input type="color" id="background-color-box">
+    <input type="text" id="time-box">
+    <script>
+      const clock = document.getElementById("clock");
+      const resetButton = document.getElementById("reset-button");
+      const backgroundColorBox = document.getElementById("background-color-box");
+      const timeBox = document.getElementById("time-box");
+      let time = 30;
+      let intervalId;
+
+      function startClock() {
+        clock.innerHTML = time;
+        time--;
+        if (time < 0) {
+          time = 30;
+        }
+        if (time <= 15) {
+          document.body.style.backgroundColor =
+            "#" + Math.floor(Math.random() * 16777215).toString(16);
+        }
+      }
+
+      resetButton.addEventListener("click", function() {
+        time = parseInt(timeBox.value) || 30;
+        clock.innerHTML = time;
+      });
+
+      backgroundColorBox.addEventListener("change", function() {
+        document.body.style.backgroundColor = backgroundColorBox.value;
+      });
+
+      intervalId = setInterval(startClock, 1000);
+    </script>
+  </body>
+</html>

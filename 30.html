@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      background-color: black;
+    }
+    
+    #clock {
+      font-size: 350px;
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+    }
+    
+    #reset-button {
+      font-size: 36px;
+      position: absolute;
+      bottom: 10px;
+      right: 50%;
+      transform: translate(50%, 0);
+      color: red;
+      cursor: pointer;
+    }
+    
+    #background-color-box {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background-color: white;
+      color: black;
+      padding: 10px;
+    }
+    
+    #time-box {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background-color: white;
+      color: black;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="clock">30</div>
+  <div id="reset-button">Reset</div>
+  <div id="background-color-box">
+    Change background color:<br>
+    <input type="color">
+  </div>
+  <div id="time-box">
+    Change time:<br>
+    <input type="text">
+  </div>
+  
+  <script>
+const clock = document.getElementById("clock");
+const resetButton = document.getElementById("reset-button");
+const backgroundColorInput = document.querySelector("#background-color-box input");
+const timeInput = document.querySelector("#time-box input");
+
+let count = 30;
+let timerId;
+
+function updateClock() {
+  clock.textContent = count;
+  if (count === 0) {
+    count = Number(timeInput.value) || 30;
+  } else {
+    count--;
+    if (count === (Number(timeInput.value) || 30) / 2) {
+      document.body.style.backgroundColor = getRandomColor();
+    } else if (count === 0) {
+      document.body.style.backgroundColor = "black";
+    }
+  }
+}
+
+
+
+function startTimer() {
+  clearInterval(timerId);
+  count = Number(timeInput.value) || 30;
+  timerId = setInterval(updateClock, 1000);
+}
+
+resetButton.addEventListener("click", startTimer);
+backgroundColorInput.addEventListener("change", function(event) {
+  document.body.style.backgroundColor = event.target.value;
+});
+timeInput.addEventListener("change", startTimer);
+
+startTimer();
+
+function getRandomColor() {
+  const letters = "0123456789ABCDEF";
+  let color = "#";
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+
+    
+  </script>
+</body>
+</html>
